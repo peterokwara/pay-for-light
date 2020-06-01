@@ -1,0 +1,11 @@
+WIFI_CONFIG = {
+    'WIFI_ESSID': '',
+    'WIFI_PASSWORD': ''
+}
+
+MQTT_CONFIG = {
+    'ADAFRUIT_IO_URL': '',
+    'ADAFRUIT_USERNAME': '',
+    'ADAFRUIT_IO_KEY': '',
+    'ADAFRUIT_IO_FEEDNAME': ''
+}
