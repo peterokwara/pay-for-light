@@ -1,0 +1,11 @@
+{
+    "mainNetNodes": [
+        MAIN-NET-NODES
+    ],
+    "devNetNodes": [
+        DEV-NET-NODES
+    ],
+    "allowedDomains": [
+        "ALLOWED-DOMAIN"
+    ]
+}

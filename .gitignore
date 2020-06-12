@@ -1,1 +1,3 @@
 esp8266/config.py
+api/node_modules/
+api/data/config.local.json

@@ -1,0 +1,9 @@
+.history
+.vercel
+node_modules
+
+/src/data/config.staging.json
+/src/data/config.prod.json
+/src/data/config.dev.json
+/src/data/config.local.json
+/dist
