@@ -9,7 +9,7 @@ export class MqttHelper {
     /**
      * The mqtt client
      */
-    public _mqttClient: mqtt.MqttClient;
+    protected _mqttClient: mqtt.MqttClient;
 
     /**
      * The mqtt host
@@ -51,29 +51,29 @@ export class MqttHelper {
     public connect(): void {
 
         // Connect mqtt with credentials (in case of needed, otherwise we can omit 2nd param)
-        const mqttClient = mqtt.connect(
+        this._mqttClient = mqtt.connect(
             this._host, { username: this._username, password: this._password, port: this._port });
 
         // Mqtt error calback
-        mqttClient.on("error", err => {
+        this._mqttClient.on("error", err => {
             console.log(err);
-            mqttClient.end();
+            this._mqttClient.end();
         });
 
         // Connection callback
-        mqttClient.on("connect", () => {
+        this._mqttClient.on("connect", () => {
             console.log(`mqtt client connected`);
         });
 
         // mqtt subscriptions
-        mqttClient.subscribe(this._feed);
+        this._mqttClient.subscribe(this._feed);
 
         // When a message arrives, console.log it
-        mqttClient.on("message", message => {
+        this._mqttClient.on("message", message => {
             console.log(message.toString());
         });
 
-        mqttClient.on("close", () => {
+        this._mqttClient.on("close", () => {
             console.log(`mqtt client disconnected`);
         });
     }
