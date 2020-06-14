@@ -1,6 +1,6 @@
 esp8266/config.py
 api/node_modules/
 api/data/config.local.json
-api/IMXBDRK99SUA9XGTVUIWOKEFQDKTGOTJMHTAS9QAJZSLWSJWDPMTGBZNJZXIJSH9BVHVLNNBJUJPKMSWB/
 api/.env
-api/db_iota-payment-ZOMX9Z.json
+api/db_*
+api/dist/
