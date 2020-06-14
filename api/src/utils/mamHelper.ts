@@ -1,9 +1,8 @@
-import { asciiToTrytes } from "@iota/converter";
 import { composeAPI } from "@iota/core";
 import { createChannel, createMessage, mamAttach } from "@iota/mam.js";
-import crypto from "crypto";
-import config from "../../data/config.local.json";
+import config from "../data/config.local.json";
 import { INodeConfiguration } from "../models/configuration/INodeConfiguration";
+import { TrytesHelper } from "./trytesHelper";
 
 /**
  * Class to handle the storage of information on the mam channel
@@ -23,17 +22,17 @@ export class MamHelper {
      * Function to store information on the mam channel
      * @param asciiMessage The message to be stored on the mam channel
      */
-    public async create(asciiMessage: string): Promise<void> {
+    public async create(asciiMessage: object): Promise<void> {
         try {
 
             // set up details for the channel
             const mode = "public";
 
             // create a new mam channel
-            const channelState = createChannel(this.generateSeed(81), 2, mode);
+            const channelState = createChannel(TrytesHelper.generateHash(81), 2, mode);
 
             // Create a MAM message using the channel state.
-            const mamMessage = createMessage(channelState, asciiToTrytes(asciiMessage));
+            const mamMessage = createMessage(channelState, TrytesHelper.toTrytes(asciiMessage));
 
             // Display the details for the MAM message.
             console.log("Seed:", channelState.seed);
@@ -55,22 +54,5 @@ export class MamHelper {
             throw new Error("Could not store the message on the mam channel");
         }
 
-    }
-
-    /**
-     * Function for creating iota seeds
-     * @param length the length of the seed
-     * @returns the generate seed
-     */
-    public generateSeed(length: number): string {
-        const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ9";
-        let seed = "";
-        while (seed.length < length) {
-            const byte = crypto.randomBytes(1);
-            if (byte[0] < 243) {
-                seed += charset.charAt(byte[0] % 27);
-            }
-        }
-        return seed;
     }
 }

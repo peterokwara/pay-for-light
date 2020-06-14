@@ -2,8 +2,8 @@
 import bodyParser from "body-parser";
 import express from "express";
 import paymentModule from "iota-payment";
+import { MamHelper } from "./utils/mamHelper";
 import { MqttHelper } from "./utils/mqttHelper";
-import { paymentHelper } from "./utils/paymentHelper";
 
 const app = express();
 
@@ -12,8 +12,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const mqttClient = new MqttHelper();
 mqttClient.connect();
-
-paymentHelper();
 
 const options = {
     api: true,
@@ -28,3 +26,15 @@ server.listen(5000, () => {
     console.log(`Server started on http://localhost:5000 `);
     console.info(`Please visit http://localhost:5000/iotapay in your browser`);
 });
+
+//Create an event handler which is called, when a payment was successfull
+const onPaymentSuccess = async payment => {
+    console.log("payment success!", payment);
+
+    // send the transaction to the mam channel
+    const mamHelper = new MamHelper();
+    await mamHelper.create(payment);
+    // run payment algo
+};
+
+paymentModule.onEvent("paymentSuccess", onPaymentSuccess);

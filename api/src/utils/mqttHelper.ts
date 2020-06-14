@@ -1,5 +1,5 @@
 import mqtt from "mqtt";
-import config from "../../data/config.local.json";
+import config from "../data/config.local.json";
 
 /**
  * Class to handle Mqtt functions
