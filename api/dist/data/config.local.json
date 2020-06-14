@@ -1,0 +1,17 @@
+{
+    "MQTT_CONFIG": {
+        "ADAFRUIT_IO_URL": "io.adafruit.com",
+        "ADAFRUIT_USERNAME": "peterokwara",
+        "ADAFRUIT_IO_KEY": "7f61d8c6412a48a1bb1ef095ab4db80a",
+        "ADAFRUIT_IO_FEEDNAME": "pay-for-light.bulb-relay",
+        "ADAFRUIT_IO_PORT": 8883
+    },
+    "node": {
+        "provider": "https://nodes.comnet.thetangle.org:443",
+        "depth": 3,
+        "mwm": 9
+    },
+    "account": {
+        "seed": "HAUJM9JGHSXATN9TDXENLDXSHXXLHWQYHZJU9LNNQOCAULOAFTV9IXZCZUNJS9LXSFKTMUACRBDBXJTVU"
+    }
+}

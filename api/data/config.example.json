@@ -1,0 +1,14 @@
+{
+    "MQTT_CONFIG": {
+        "ADAFRUIT_IO_URL": "",
+        "ADAFRUIT_USERNAME": "",
+        "ADAFRUIT_IO_KEY": "",
+        "ADAFRUIT_IO_FEEDNAME": "",
+        "ADAFRUIT_IO_PORT": ""
+    },
+    "node": {
+        "provider": "https://nodes.comnet.thetangle.org:443",
+        "depth": 3,
+        "mwm": 9
+    }
+}
