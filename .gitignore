@@ -6,4 +6,3 @@ api/db_*
 api/dist/
 api/dist/index.js
 api/dist/utils/mqttHelper.js
-.gitignore
