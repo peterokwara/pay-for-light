@@ -2,6 +2,7 @@
 import bodyParser from "body-parser";
 import express from "express";
 import paymentModule from "iota-payment";
+import scheduler from "node-schedule";
 import { MamHelper } from "./utils/mamHelper";
 import { MqttHelper } from "./utils/mqttHelper";
 
@@ -12,6 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const mqttClient = new MqttHelper();
 mqttClient.connect();
+mqttClient.sendMessage("OFF");
 
 const options = {
     api: true,
@@ -29,7 +31,6 @@ server.listen(5000, () => {
 
 //Create an event handler which is called, when a payment was successfull
 const onPaymentSuccess = async payment => {
-    console.log("payment success!", payment);
 
     const transaction = {
         paid: payment.paid,
@@ -44,48 +45,48 @@ const onPaymentSuccess = async payment => {
             value: payment.txInfo.value,
             message: payment.txInfo.message
         },
-        event: [`User has paid ${payment.txInfo.value} for lights`]
+        event: [`User has paid ${payment.txInfo.value} tokens for lights`]
     };
 
     // send the transaction to the mam channel
     const mamHelper = new MamHelper();
 
+    // send the transaction and event
     await mamHelper.create(transaction);
 
-    transaction.event.push(`Lights are on ${Date.now()}`);
-    await mamHelper.create(transaction);
-
-    // amount of minutes the lights will be on
-    const minutes = payment.txInfo.value * 60000;
-
-    // repeat with the interval of 30 seconds
-    const timerId = setInterval(() => {
-        mqttClient.sendMessage("ON");
+    setTimeout(async () => {
+        // send the event that the lights are now on
+        transaction.event.push(`Lights are on ${Date.now()}`);
+        await mamHelper.create(transaction);
 
         // tslint:disable-next-line: align
-    }, 20000);
+    }, 3000);
 
-    // after 5 seconds stop
-    setTimeout(() => { clearInterval(timerId); }, minutes);
+    const seconds: number = payment.txInfo.value * 60000;
 
-    transaction.event.push(`Lights are off ${Date.now()}`);
-    await mamHelper.create(transaction);
-    // // run payment algo
-    // setTimeout(async () => {
+    console.log(`Runtime for now is ${seconds}`);
 
-    //     transaction.event.push(`Lights are on`);
-    //     await mamHelper.create(transaction);
+    const startTime = new Date(Date.now());
+    const endTime = new Date(startTime.getTime() + seconds);
 
-    //     // keep it on by sending the on message every 30 seconds
-    //     setTimeout(() => {
-    //         mqttClient.sendMessage("ON");
-    //         // tslint:disable-next-line: align
-    //     }, 500);
+    await scheduler.scheduleJob({ start: startTime, end: endTime, rule: `*/10 * * * * *` }, () => {
+        mqttClient.sendMessage("ON");
+        console.log("😊");
+    });
 
-    //     // tslint:disable-next-line: align
-    // }, minutes);
+    const newEndTime = new Date(endTime.getTime() + 30000);
 
-    mqttClient.sendMessage("OFF");
+    await scheduler.scheduleJob({ start: endTime, end: newEndTime, rule: `*/10 * * * * *` }, () => {
+        mqttClient.sendMessage("OFF");
+        console.log("😐");
+    });
+
+    await scheduler.scheduleJob({ start: endTime, end: newEndTime, rule: `*/30 * * * * *` }, async () => {
+
+        // send the event that the lights are now off
+        transaction.event.push(`Lights are off ${Date.now()}`);
+        await mamHelper.create(transaction);
+    });
 
 };
 

@@ -51,7 +51,7 @@ export class MamHelper {
             console.log(`You can view the mam channel here https://utils.iota.org/mam/${mamMessage.root}/devnet`);
 
         } catch (error) {
-            throw new Error("Could not store the message on the mam channel");
+            throw new Error(`Could not store the message on the mam channel ${error} `);
         }
 
     }

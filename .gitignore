@@ -6,3 +6,8 @@ api/db_*
 api/dist/
 api/dist/index.js
 api/dist/utils/mqttHelper.js
+node_modules/
+api/dist/data/config.local.json
+api/dist/data/config.local.json
+api/dist/index.js
+api/dist/index.js
