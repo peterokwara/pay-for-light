@@ -3,11 +3,6 @@ api/node_modules/
 api/data/config.local.json
 api/.env
 api/db_*
-api/dist/
-api/dist/index.js
-api/dist/utils/mqttHelper.js
+api/dist
 node_modules/
-api/dist/data/config.local.json
-api/dist/data/config.local.json
-api/dist/index.js
-api/dist/index.js
+
