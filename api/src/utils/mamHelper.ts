@@ -1,5 +1,6 @@
 import { composeAPI } from "@iota/core";
-import { channelRoot, createChannel, createMessage, mamAttach } from "@iota/mam.js";
+import { createChannel, createMessage, mamAttach } from "@iota/mam.js";
+import fs from "fs";
 import config from "../data/config.local.json";
 import { INodeConfiguration } from "../models/configuration/INodeConfiguration";
 import { TrytesHelper } from "./trytesHelper";
@@ -14,11 +15,6 @@ export class MamHelper {
      */
     private readonly _nodeConfig: INodeConfiguration;
 
-    /**
-     * Mam channel seed
-     */
-    private readonly _seed: string;
-
     constructor() {
         this._nodeConfig = config.node;
     }
@@ -30,11 +26,25 @@ export class MamHelper {
     public async create(asciiMessage: object): Promise<void> {
         try {
 
-            // set up details for the channel
-            const mode = "public";
+            let channelState;
 
-            // create a new mam channel
-            const channelState = createChannel(TrytesHelper.generateHash(81), 2, mode);
+            // Try and load the channel state from json file
+            try {
+                const currentState = fs.readFileSync("./channelState.json");
+                if (currentState) {
+                    channelState = JSON.parse(currentState.toString());
+                }
+            } catch (e) { }
+
+            // If we couldn't load the details then create a new channel.
+            if (!channelState) {
+
+                // set up details for the channel
+                const mode = "public";
+
+                // create a new mam channel
+                channelState = createChannel(TrytesHelper.generateHash(81), 2, mode);
+            }
 
             // Create a MAM message using the channel state.
             const mamMessage = createMessage(channelState, TrytesHelper.toTrytes(asciiMessage));
@@ -54,6 +64,13 @@ export class MamHelper {
             await mamAttach(iota, mamMessage, this._nodeConfig.depth, this._nodeConfig.mwm);
 
             console.log(`You can view the mam channel here https://utils.iota.org/mam/${mamMessage.root}/devnet`);
+
+            // Store the channel state.
+            try {
+                fs.writeFileSync("./channelState.json", JSON.stringify(channelState, undefined, "\t"));
+            } catch (e) {
+                console.error(e);
+            }
 
         } catch (error) {
             throw new Error(`Could not store the message on the mam channel ${error} `);
