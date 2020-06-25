@@ -5,4 +5,4 @@ api/.env
 api/db_*
 api/dist
 node_modules/
-
+api/channelState.json
