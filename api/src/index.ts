@@ -29,6 +29,10 @@ server.listen(5000, () => {
     console.info(`Please visit http://localhost:5000/iotapay in your browser`);
 });
 
+const time = () => {
+    return new Date();
+};
+
 //Create an event handler which is called, when a payment was successfull
 const onPaymentSuccess = async payment => {
 
@@ -56,7 +60,7 @@ const onPaymentSuccess = async payment => {
 
     setTimeout(async () => {
         // send the event that the lights are now on
-        transaction.event.push(`Lights are on ${Date.now()}`);
+        transaction.event.push(`Lights are on ${time()}`);
         await mamHelper.create(transaction);
 
         // tslint:disable-next-line: align
@@ -84,7 +88,7 @@ const onPaymentSuccess = async payment => {
     await scheduler.scheduleJob({ start: endTime, end: newEndTime, rule: `*/30 * * * * *` }, async () => {
 
         // send the event that the lights are now off
-        transaction.event.push(`Lights are off ${Date.now()}`);
+        transaction.event.push(`Lights are off ${time()}`);
         await mamHelper.create(transaction);
     });
 
