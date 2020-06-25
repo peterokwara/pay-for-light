@@ -14,8 +14,14 @@ export class MamHelper {
      */
     private readonly _nodeConfig: INodeConfiguration;
 
+    /**
+     * Mam channel seed
+     */
+    private readonly _seed: string;
+
     constructor() {
         this._nodeConfig = config.node;
+        this._seed = config.mam.seed;
     }
 
     /**
@@ -29,7 +35,7 @@ export class MamHelper {
             const mode = "public";
 
             // create a new mam channel
-            const channelState = createChannel(TrytesHelper.generateHash(81), 2, mode);
+            const channelState = createChannel(this._seed, 2, mode);
 
             // Create a MAM message using the channel state.
             const mamMessage = createMessage(channelState, TrytesHelper.toTrytes(asciiMessage));
