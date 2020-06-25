@@ -1,5 +1,5 @@
 import { composeAPI } from "@iota/core";
-import { createChannel, createMessage, mamAttach } from "@iota/mam.js";
+import { channelRoot, createChannel, createMessage, mamAttach } from "@iota/mam.js";
 import config from "../data/config.local.json";
 import { INodeConfiguration } from "../models/configuration/INodeConfiguration";
 import { TrytesHelper } from "./trytesHelper";
@@ -21,7 +21,6 @@ export class MamHelper {
 
     constructor() {
         this._nodeConfig = config.node;
-        this._seed = config.mam.seed;
     }
 
     /**
@@ -35,7 +34,7 @@ export class MamHelper {
             const mode = "public";
 
             // create a new mam channel
-            const channelState = createChannel(this._seed, 2, mode);
+            const channelState = createChannel(TrytesHelper.generateHash(81), 2, mode);
 
             // Create a MAM message using the channel state.
             const mamMessage = createMessage(channelState, TrytesHelper.toTrytes(asciiMessage));
